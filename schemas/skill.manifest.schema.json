@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/u-capability/skill.manifest.schema.json",
+  "title": "U-Capability Skill Manifest",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "name", "version", "domains", "capability_classes", "inputs", "outputs", "authority_surfaces", "side_effects", "claim_boundary"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$"},
+    "name": {"type": "string"},
+    "version": {"type": "string"},
+    "description": {"type": "string"},
+    "domains": {"type": "array", "items": {"type": "string"}},
+    "capability_classes": {"type": "array", "items": {"type": "string"}},
+    "ksl_stage": {
+      "type": "array",
+      "items": {"enum": ["map", "walk", "verify", "receipt", "boundary", "repair", "ultra", "unknown"]}
+    },
+    "inputs": {"type": "array", "items": {"type": "string"}},
+    "outputs": {"type": "array", "items": {"type": "string"}},
+    "artifacts": {"type": "array", "items": {"type": "string"}},
+    "authority_surfaces": {
+      "type": "array",
+      "items": {"enum": ["file_read", "file_write", "shell", "network", "delete", "env_token", "config_mutation", "repo_mutation", "unknown"]}
+    },
+    "side_effects": {
+      "type": "object",
+      "required": ["default"],
+      "properties": {
+        "default": {"enum": ["none", "dry_run", "writes_out_dir", "mutates_target", "unknown"]},
+        "writes": {"type": "array", "items": {"type": "string"}},
+        "requires_apply": {"type": "boolean"}
+      }
+    },
+    "compatible_surfaces": {"type": "array", "items": {"type": "string"}},
+    "origin": {
+      "type": "object",
+      "properties": {
+        "type": {"enum": ["user-made", "auto-skill", "repo-imported", "generated", "unknown"]},
+        "confidence": {"enum": ["high", "medium", "low", "unknown"]},
+        "original_paths": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "relation"],
+        "properties": {
+          "target": {"type": "string"},
+          "relation": {"enum": ["upstream", "downstream", "requires", "emits_for", "duplicates", "supersedes", "related", "unknown"]}
+        }
+      }
+    },
+    "claim_boundary": {"type": "string"},
+    "review_notes": {"type": "array", "items": {"type": "string"}}
+  }
+}
